@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Leaf, Eye, EyeOff, AlertCircle } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { supabase } from '../lib/supabase'
 
 export default function Login() {
   const { signIn } = useAuth()
@@ -29,15 +30,21 @@ export default function Login() {
       return
     }
 
-    // redirect to where they came from, or role-based default
-    if (from) {
-      navigate(from, { replace: true })
-    } else {
-      const role = data?.user?.user_metadata?.role
-      // profile role is fetched async by AuthContext; use a short delay then redirect
-      // AuthContext will redirect properly via ProtectedRoute once profile loads
-      navigate('/dashboard', { replace: true })
-    }
+    // fetch profile to get role for redirect
+    const { data: prof } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', data.user.id)
+      .single()
+
+    const dest = {
+      generator:     '/dashboard',
+      collector:     '/collector',
+      admin:         '/admin',
+      platform_admin:'/admin',
+    }[prof?.role] ?? '/'
+
+    navigate(from ?? dest, { replace: true })
   }
 
   return (
