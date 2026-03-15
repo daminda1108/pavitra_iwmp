@@ -1,12 +1,13 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, Building2, List, BarChart3 } from 'lucide-react'
+import { LayoutDashboard, Users, Building2, List, BarChart3, FlaskConical } from 'lucide-react'
 
 const navItems = [
-  { to: '/admin',           label: 'Overview',   icon: LayoutDashboard, end: true },
-  { to: '/admin/collectors', label: 'Collectors', icon: Users },
-  { to: '/admin/generators', label: 'Generators', icon: Building2 },
-  { to: '/admin/listings',   label: 'Listings',   icon: List },
-  { to: '/admin/reports',    label: 'Reports',    icon: BarChart3 },
+  { to: '/admin',             label: 'Overview',   icon: LayoutDashboard, end: true },
+  { to: '/admin/collectors',  label: 'Collectors', icon: Users },
+  { to: '/admin/generators',  label: 'Generators', icon: Building2 },
+  { to: '/admin/listings',    label: 'Listings',   icon: List },
+  { to: '/admin/materials',   label: 'Materials',  icon: FlaskConical },
+  { to: '/admin/reports',     label: 'Reports',    icon: BarChart3 },
 ]
 
 export default function AdminLayout() {

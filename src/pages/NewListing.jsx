@@ -9,6 +9,7 @@ import Navbar from '../components/layout/Navbar'
 import HazardBadge from '../components/shared/HazardBadge'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabase'
+import { sendEmail } from '../lib/email'
 import { cn, formatDate } from '../lib/utils'
 import {
   WASTE_STREAMS, EWASTE_DEVICE_CATEGORIES, HAZARD_LEVELS,
@@ -263,6 +264,24 @@ export default function NewListing() {
       setSubmitting(false)
       return
     }
+
+    // Notify approved collectors about new listing (fire-and-forget)
+    const { data: approvedCollectors } = await supabase
+      .from('collectors')
+      .select('profiles(email)')
+      .eq('status', 'approved')
+    ;(approvedCollectors ?? []).forEach(c => {
+      if (c.profiles?.email) {
+        sendEmail('new_listing', c.profiles.email, {
+          material:   materialName || subcategory || wasteStream,
+          stream:     WASTE_STREAMS[wasteStream]?.label ?? wasteStream,
+          quantity:   String(quantity),
+          unit:       unit,
+          location:   campusLocation,
+          listing_id: data.id,
+        })
+      }
+    })
 
     navigate('/dashboard', { replace: true })
   }

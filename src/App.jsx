@@ -20,6 +20,7 @@ import AdminOverview  from './pages/admin/AdminOverview'
 import AdminCollectors from './pages/admin/AdminCollectors'
 import AdminGenerators from './pages/admin/AdminGenerators'
 import AdminListings  from './pages/admin/AdminListings'
+import AdminMaterials from './pages/admin/AdminMaterials'
 import AdminReports   from './pages/admin/AdminReports'
 
 export default function App() {
@@ -71,6 +72,7 @@ export default function App() {
             <Route path="collectors" element={<AdminCollectors />} />
             <Route path="generators" element={<AdminGenerators />} />
             <Route path="listings"   element={<AdminListings />} />
+            <Route path="materials"  element={<AdminMaterials />} />
             <Route path="reports"    element={<AdminReports />} />
           </Route>
 

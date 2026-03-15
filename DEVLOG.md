@@ -33,11 +33,34 @@ Each entry covers: what was designed/decided, what was built, and what's next.
 - `src/pages/CollectorProfilePage.jsx` — public company profile, CEA license + verification badge, accepted streams, capability badges (Basel, data destruction, CRT, ISO, etc.)
 - `npm run build` passes — zero errors
 
-### Still TODO
-- Phase 4: Admin panel (all pages)
-- Phase 5: Email (Resend), landing page, privacy/terms, deployment
-- Phase 4: Admin panel (all pages)
-- Phase 5: Email (Resend), landing page, privacy/terms, mobile pass, deployment
+### Built (Phase 4 — Admin Panel)
+- `src/pages/admin/AdminOverview.jsx` — stats grid (open/bidding/completed listings, approved/pending collectors, generators), pending approval alert banner, recent 8 listings table
+- `src/pages/admin/AdminCollectors.jsx` — full collector management: tabs (all/pending/approved/rejected), expandable rows with contact details, approve/reject modal with reason input, revoke action, link to public profile
+- `src/pages/admin/AdminGenerators.jsx` — generators table (name, email, faculty/dept, authorized status, join date) + invite management (list all invites with status, copy link to clipboard) + "Send Invite" modal (email optional, faculty/dept, expiry 3/7/14/30 days)
+- `src/pages/admin/AdminListings.jsx` — monitor all listings: status + stream filters, text search, full table with HazardBadge + StatusBadge, external link to board
+- `src/pages/admin/AdminReports.jsx` — recharts: monthly listings bar chart (last 6 months), listings-by-stream pie chart, listings-by-status horizontal bar chart; summary cards (total, completion rate, claims)
+- `src/pages/admin/AdminMaterials.jsx` — material library management: filterable table by stream/name/CAS, add-material modal (name, stream, hazard, subcategory, CAS), CSV bulk import modal (parse + preview + upsert)
+- `src/pages/admin/AdminLayout.jsx` — added Materials nav item (FlaskConical icon)
+- `src/App.jsx` — added `/admin/materials` route + AdminMaterials import
+- `npm run build` passes — zero errors
+
+### Built (Phase 5 — Polish + Deploy)
+- `src/pages/Landing.jsx` — full marketing landing page: hero (gradient, UoP pilot badge, CTA buttons), 4-step "how it works" section, 3 feature cards (CEA compliance, bidding, audit trail), verified collectors showcase (CWM, Green Links Lanka, INSEE Ecocycle with badges), CTA section, footer
+- `src/pages/WantedBoard.jsx` — functional "Buyers Seeking" board: public browse (stream filter, card grid with collector info), approved collectors can post wanted listings via modal (stream, min qty, frequency, service area, notes), 90-day expiry
+- `supabase/functions/send-email/index.ts` — Deno edge function: wraps Resend API, handles types: `collector_approved`, `collector_rejected`, `new_listing`, `claim_confirmed`; gracefully skips if RESEND_API_KEY not set
+- `src/lib/email.js` — thin frontend helper that calls edge function via `supabase.functions.invoke`
+- Email wired: AdminCollectors approve/reject → send email to collector; NewListing submit → notify all approved collectors
+- `vercel.json` — SPA rewrite rule `/* → /index.html` for Vercel deployment
+- `npm run build` passes — zero errors
+
+### Deployment checklist
+1. Push to GitHub
+2. Connect repo to Vercel (auto-detects Vite)
+3. Add env vars in Vercel: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_APP_URL`
+4. Deploy Supabase edge function: `supabase functions deploy send-email`
+5. Set Supabase secrets: `supabase secrets set RESEND_API_KEY=... FROM_EMAIL=noreply@pavitra.lk APP_URL=https://your-vercel-url`
+
+### Platform complete — all phases done ✓
 
 ---
 
