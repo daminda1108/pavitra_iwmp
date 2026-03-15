@@ -26,7 +26,10 @@ export default function Navbar() {
             <div className="w-8 h-8 bg-brand-forest rounded-lg flex items-center justify-center">
               <Leaf className="w-5 h-5 text-white" />
             </div>
-            <span className="font-display font-semibold text-xl text-brand-bark">Pavitra</span>
+            <span className="relative inline-block font-display font-semibold text-xl text-brand-bark pt-1 tracking-wide">
+              <span className="absolute top-0 left-0 right-0 h-0.5 bg-brand-bark rounded-full" />
+              Pavitra
+            </span>
           </Link>
 
           <div className="hidden md:flex items-center gap-6">
