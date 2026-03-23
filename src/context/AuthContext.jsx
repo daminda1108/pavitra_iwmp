@@ -41,6 +41,10 @@ export function AuthProvider({ children }) {
 
   async function signIn(email, password) {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    if (!error && data.user) {
+      setUser(data.user)
+      await fetchProfile(data.user.id)
+    }
     return { data, error }
   }
 

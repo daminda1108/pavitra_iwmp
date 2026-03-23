@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import {
-  ArrowRight, Leaf, ClipboardList, UserCheck, FileCheck,
-  ShieldCheck, Globe, Lock, Truck, Gem, Award
+  ArrowRight, GraduationCap, ClipboardList, UserCheck, FileCheck,
+  ShieldCheck, Globe, Truck, Gem, Award
 } from 'lucide-react'
 import Navbar from '../components/layout/Navbar'
 import { useAuth } from '../context/AuthContext'
@@ -68,7 +68,7 @@ const COLLECTORS = [
     name:    'Green Links Lanka',
     tagline: 'Pioneer in responsible e-waste management',
     badges:  ['CRT / Mercury handling', 'Campus doorstep pickup', 'Destruction certs'],
-    icon:    Leaf,
+    icon:    Truck,
   },
   {
     name:    'INSEE Ecocycle',
@@ -97,15 +97,15 @@ export default function Landing() {
         <div className="absolute inset-0 bg-gradient-to-br from-brand-forest/10 via-transparent to-brand-sage/10 pointer-events-none" />
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-24 sm:py-32 text-center relative">
           <div className="inline-flex items-center gap-2 bg-brand-forest/10 text-brand-forest text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
-            <Leaf className="w-3.5 h-3.5" />
-            Pilot — University of Peradeniya
+            <GraduationCap className="w-3.5 h-3.5" />
+            University of Peradeniya — Vidya Dadati Vinayam
           </div>
           <h1 className="font-display text-5xl sm:text-6xl text-brand-bark leading-tight mb-6">
-            Institutional waste,<br />
-            <span className="text-brand-forest">properly handled.</span>
+            University waste,<br />
+            <span className="text-brand-forest">responsibly managed.</span>
           </h1>
           <p className="text-text-muted text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-            Pavitra connects university departments with CEA-licensed waste collectors.
+            The UoP Integrated Waste Management Platform connects university departments with CEA-licensed waste collectors.
             List surplus chemicals, e-waste, and lab materials — and track every pickup to a verified Waste Transfer Record.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -230,7 +230,7 @@ export default function Landing() {
           <h2 className="font-display text-3xl text-brand-bark mb-4">Ready to list your first batch?</h2>
           <p className="text-text-muted mb-8">
             University departments can post waste listings once authorised by a department coordinator.
-            Contact your department's waste coordinator or email us to get started.
+            Contact the UoP Environmental Health &amp; Safety Office or your department's waste coordinator to get started.
           </p>
           <Link to="/board"
             className="inline-flex items-center gap-2 bg-brand-forest text-white px-6 py-3 rounded-xl font-medium hover:bg-brand-moss transition-colors">
@@ -244,16 +244,18 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-muted">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-brand-forest rounded-md flex items-center justify-center">
-              <Leaf className="w-3.5 h-3.5 text-white" />
+              <GraduationCap className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="font-display font-semibold text-brand-bark text-sm">Pavitra</span>
+            <span className="font-display font-semibold text-brand-bark text-sm">UoP IWMP</span>
           </div>
           <div className="flex items-center gap-6">
             <Link to="/board" className="hover:text-text-primary transition-colors">Waste Board</Link>
             <Link to="/wanted" className="hover:text-text-primary transition-colors">Buyers Seeking</Link>
+            <Link to="/guidelines" className="hover:text-text-primary transition-colors">Guidelines</Link>
+            <Link to="/compliance" className="hover:text-text-primary transition-colors">Compliance</Link>
             <Link to="/login" className="hover:text-text-primary transition-colors">Sign In</Link>
           </div>
-          <p>Pilot programme — University of Peradeniya © 2025</p>
+          <p>University of Peradeniya · Vidya Dadati Vinayam · © 2025</p>
         </div>
       </footer>
     </div>

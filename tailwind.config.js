@@ -6,17 +6,17 @@ export default {
     extend: {
       colors: {
         brand: {
-          forest: '#3D6B4F',
-          sage:   '#7A9E7E',
-          amber:  '#C4882A',
-          cream:  '#F7F4EE',
-          bark:   '#5C4A32',
-          moss:   '#2C4A35',
+          forest: '#800020',  /* UoP Maroon — primary */
+          sage:   '#C5A649',  /* UoP Gold — secondary */
+          amber:  '#A8882A',  /* UoP Gold dark — accents */
+          cream:  '#F5EED6',  /* UoP light gold tint — backgrounds */
+          bark:   '#4A0010',  /* UoP dark maroon — headings/text */
+          moss:   '#5C0013',  /* UoP deep maroon — hover/sidebar */
         },
         surface: {
           card:   '#FFFFFF',
-          border: '#E5E0D8',
-          muted:  '#F0EDE6',
+          border: '#E8E0CC',
+          muted:  '#F0E8D0',
         },
         text: {
           primary: '#1C1C1C',
@@ -24,7 +24,7 @@ export default {
           inverse: '#FFFFFF',
         },
         status: {
-          open:      '#3D6B4F',
+          open:      '#15803D',
           claimed:   '#C4882A',
           confirmed: '#2563EB',
           completed: '#6B7280',

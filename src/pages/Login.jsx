@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { Leaf, Eye, EyeOff, AlertCircle } from 'lucide-react'
+import { GraduationCap, Eye, EyeOff, AlertCircle } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabase'
 
@@ -51,11 +51,14 @@ export default function Login() {
     <div className="min-h-screen bg-brand-cream flex flex-col">
       {/* Top bar */}
       <div className="px-6 py-4">
-        <Link to="/" className="inline-flex items-center gap-2">
+        <Link to="/" className="inline-flex items-center gap-2.5">
           <div className="w-8 h-8 bg-brand-forest rounded-lg flex items-center justify-center">
-            <Leaf className="w-5 h-5 text-white" />
+            <GraduationCap className="w-5 h-5 text-white" />
           </div>
-          <span className="font-display font-semibold text-xl text-brand-bark">Pavitra</span>
+          <div className="flex flex-col leading-none">
+            <span className="font-display font-semibold text-base text-brand-bark tracking-wide">UoP IWMP</span>
+            <span className="text-[10px] text-text-muted tracking-wider">Integrated Waste Management</span>
+          </div>
         </Link>
       </div>
 
@@ -63,7 +66,7 @@ export default function Login() {
       <div className="flex-1 flex items-center justify-center px-4 pb-16">
         <div className="w-full max-w-md bg-surface-card border border-surface-border rounded-2xl p-8 shadow-sm">
           <h1 className="font-display text-3xl text-brand-bark mb-1">Welcome back</h1>
-          <p className="text-text-muted text-sm mb-8">Sign in to your Pavitra account.</p>
+          <p className="text-text-muted text-sm mb-8">Sign in to the UoP Integrated Waste Management Platform.</p>
 
           {error && (
             <div className="mb-5 flex items-start gap-2.5 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm">

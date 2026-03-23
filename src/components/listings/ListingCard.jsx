@@ -5,13 +5,15 @@ import HazardBadge from '../shared/HazardBadge'
 import { formatDate, formatCurrency } from '../../lib/utils'
 import { WASTE_STREAMS } from '../../lib/constants'
 
-/**
- * ListingCard — used in GeneratorDashboard.
- * Props:
- *   listing     — listing row from Supabase
- *   onCancel(id) — callback to cancel listing
- *   showActions — default true
- */
+const STREAM_DOT = {
+  green:  'bg-green-400',
+  blue:   'bg-blue-400',
+  yellow: 'bg-yellow-400',
+  purple: 'bg-purple-400',
+  red:    'bg-red-400',
+  gray:   'bg-gray-400',
+}
+
 export default function ListingCard({ listing, onCancel, showActions = true }) {
   const stream = WASTE_STREAMS[listing.waste_stream]
   const displayName = listing.material_name || listing.subcategory || listing.waste_stream
@@ -22,7 +24,7 @@ export default function ListingCard({ listing, onCancel, showActions = true }) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className={`inline-block w-2 h-2 rounded-full bg-${stream?.color ?? 'gray'}-400`} />
+            <span className={`inline-block w-2 h-2 rounded-full ${STREAM_DOT[stream?.color] ?? 'bg-gray-400'}`} />
             <span className="text-xs text-text-muted uppercase tracking-wide font-medium">
               {stream?.label ?? listing.waste_stream}
             </span>

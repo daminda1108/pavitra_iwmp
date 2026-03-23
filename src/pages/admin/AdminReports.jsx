@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Download } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend
@@ -16,6 +16,22 @@ const STREAM_COLORS = {
   general:  '#9ca3af',
 }
 
+function downloadCSV(rows, filename) {
+  if (!rows.length) return
+  const headers = Object.keys(rows[0])
+  const csv = [
+    headers.join(','),
+    ...rows.map(r => headers.map(h => JSON.stringify(r[h] ?? '')).join(','))
+  ].join('\n')
+  const blob = new Blob([csv], { type: 'text/csv' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
 export default function AdminReports() {
   const [listings,  setListings]  = useState([])
   const [claims,    setClaims]    = useState([])
@@ -24,7 +40,7 @@ export default function AdminReports() {
   useEffect(() => {
     async function load() {
       const [lRes, cRes] = await Promise.all([
-        supabase.from('listings').select('waste_stream, status, created_at'),
+        supabase.from('listings').select('waste_stream, status, created_at, faculty, department, quantity, unit'),
         supabase.from('claims').select('status, created_at'),
       ])
       setListings(lRes.data ?? [])
@@ -65,6 +81,13 @@ export default function AdminReports() {
     return { month: label, count }
   })
 
+  // By faculty/department
+  const faculties = [...new Set(listings.map(l => l.faculty).filter(Boolean))]
+  const facultyData = faculties.map(f => ({
+    faculty: f,
+    count: listings.filter(l => l.faculty === f).length,
+  })).sort((a, b) => b.count - a.count)
+
   const completionRate = listings.length > 0
     ? Math.round((listings.filter(l => l.status === 'completed').length / listings.length) * 100)
     : 0
@@ -73,12 +96,31 @@ export default function AdminReports() {
     ? Math.round((claims.length / listings.length) * 100)
     : 0
 
+  function handleExport() {
+    const rows = listings.map(l => ({
+      date:        l.created_at?.slice(0, 10),
+      waste_stream: l.waste_stream,
+      status:      l.status,
+      faculty:     l.faculty ?? '',
+      department:  l.department ?? '',
+      quantity:    l.quantity ?? '',
+      unit:        l.unit ?? '',
+    }))
+    downloadCSV(rows, `uop-iwmp-report-${new Date().toISOString().slice(0,10)}.csv`)
+  }
+
   return (
     <div>
-      <h1 className="font-display text-3xl text-brand-bark mb-6">Reports</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="font-display text-3xl text-brand-bark">Reports</h1>
+        <button onClick={handleExport}
+          className="flex items-center gap-2 border border-surface-border bg-white text-text-primary px-4 py-2 rounded-xl text-sm hover:bg-surface-muted transition-colors">
+          <Download className="w-4 h-4" /> Export CSV
+        </button>
+      </div>
 
       {/* Summary cards */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         <div className="bg-white border border-surface-border rounded-xl p-5">
           <p className="text-xs text-text-muted mb-1">Total listings</p>
           <p className="text-3xl font-semibold text-text-primary">{listings.length}</p>
@@ -90,6 +132,10 @@ export default function AdminReports() {
         <div className="bg-white border border-surface-border rounded-xl p-5">
           <p className="text-xs text-text-muted mb-1">Total claims</p>
           <p className="text-3xl font-semibold text-text-primary">{claims.length}</p>
+        </div>
+        <div className="bg-white border border-surface-border rounded-xl p-5">
+          <p className="text-xs text-text-muted mb-1">Claim rate</p>
+          <p className="text-3xl font-semibold text-text-primary">{claimRate}%</p>
         </div>
       </div>
 
@@ -106,7 +152,7 @@ export default function AdminReports() {
                 <XAxis dataKey="month" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
                 <Tooltip />
-                <Bar dataKey="count" fill="#3D6B4F" radius={[4,4,0,0]} />
+                <Bar dataKey="count" fill="#800020" radius={[4,4,0,0]} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -120,7 +166,8 @@ export default function AdminReports() {
           ) : (
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
-                <Pie data={streamCounts} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} label={({ name, percent }) => `${name.split(' ')[0]} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
+                <Pie data={streamCounts} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70}
+                  label={({ name, percent }) => `${name.split(' ')[0]} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
                   {streamCounts.map(s => (
                     <Cell key={s.key} fill={STREAM_COLORS[s.key] ?? '#9ca3af'} />
                   ))}
@@ -132,22 +179,42 @@ export default function AdminReports() {
         </div>
       </div>
 
-      {/* Status breakdown */}
-      <div className="bg-white border border-surface-border rounded-xl p-5">
-        <h2 className="font-semibold text-text-primary text-sm mb-4">Listings by status</h2>
-        {statusCounts.length === 0 ? (
-          <p className="text-xs text-text-muted">No data yet.</p>
-        ) : (
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={statusCounts} layout="vertical" margin={{ top: 0, right: 20, bottom: 0, left: 20 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
-              <XAxis type="number" tick={{ fontSize: 11 }} allowDecimals={false} />
-              <YAxis type="category" dataKey="status" tick={{ fontSize: 11 }} width={80} />
-              <Tooltip />
-              <Bar dataKey="count" fill="#4e8c67" radius={[0,4,4,0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        )}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Status breakdown */}
+        <div className="bg-white border border-surface-border rounded-xl p-5">
+          <h2 className="font-semibold text-text-primary text-sm mb-4">Listings by status</h2>
+          {statusCounts.length === 0 ? (
+            <p className="text-xs text-text-muted">No data yet.</p>
+          ) : (
+            <ResponsiveContainer width="100%" height={180}>
+              <BarChart data={statusCounts} layout="vertical" margin={{ top: 0, right: 20, bottom: 0, left: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
+                <XAxis type="number" tick={{ fontSize: 11 }} allowDecimals={false} />
+                <YAxis type="category" dataKey="status" tick={{ fontSize: 11 }} width={80} />
+                <Tooltip />
+                <Bar dataKey="count" fill="#C5A649" radius={[0,4,4,0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+
+        {/* Faculty breakdown */}
+        <div className="bg-white border border-surface-border rounded-xl p-5">
+          <h2 className="font-semibold text-text-primary text-sm mb-4">Listings by faculty / department</h2>
+          {facultyData.length === 0 ? (
+            <p className="text-xs text-text-muted">No faculty data yet — listings need a faculty field to appear here.</p>
+          ) : (
+            <ResponsiveContainer width="100%" height={180}>
+              <BarChart data={facultyData} layout="vertical" margin={{ top: 0, right: 20, bottom: 0, left: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
+                <XAxis type="number" tick={{ fontSize: 11 }} allowDecimals={false} />
+                <YAxis type="category" dataKey="faculty" tick={{ fontSize: 10 }} width={100} />
+                <Tooltip />
+                <Bar dataKey="count" fill="#800020" radius={[0,4,4,0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </div>
       </div>
     </div>
   )

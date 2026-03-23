@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, Building2, List, BarChart3, FlaskConical, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Users, Building2, List, BarChart3, FlaskConical, Menu, X, Megaphone } from 'lucide-react'
 
 const navItems = [
-  { to: '/admin',             label: 'Overview',   icon: LayoutDashboard, end: true },
-  { to: '/admin/collectors',  label: 'Collectors', icon: Users },
-  { to: '/admin/generators',  label: 'Generators', icon: Building2 },
-  { to: '/admin/listings',    label: 'Listings',   icon: List },
-  { to: '/admin/materials',   label: 'Materials',  icon: FlaskConical },
-  { to: '/admin/reports',     label: 'Reports',    icon: BarChart3 },
+  { to: '/admin',                  label: 'Overview',       icon: LayoutDashboard, end: true },
+  { to: '/admin/collectors',       label: 'Collectors',     icon: Users },
+  { to: '/admin/generators',       label: 'Generators',     icon: Building2 },
+  { to: '/admin/listings',         label: 'Listings',       icon: List },
+  { to: '/admin/materials',        label: 'Materials',      icon: FlaskConical },
+  { to: '/admin/announcements',    label: 'Announcements',  icon: Megaphone },
+  { to: '/admin/reports',          label: 'Reports',        icon: BarChart3 },
 ]
 
 function NavItems({ onClose }) {
@@ -39,7 +40,7 @@ export default function AdminLayout() {
 
       {/* Mobile top bar */}
       <div className="md:hidden flex items-center justify-between bg-brand-moss text-white px-4 py-3 sticky top-0 z-40">
-        <span className="font-display font-semibold text-base tracking-wide">Pavitra Admin</span>
+        <span className="font-display font-semibold text-base tracking-wide">UoP Admin</span>
         <button onClick={() => setOpen(o => !o)} className="p-1">
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -55,7 +56,7 @@ export default function AdminLayout() {
       <div className="flex">
         {/* Desktop sidebar */}
         <aside className="hidden md:flex md:flex-col w-56 bg-brand-moss text-white flex-shrink-0 p-4 min-h-screen sticky top-0">
-          <div className="font-display font-semibold text-lg mb-6 px-2 tracking-wide">Pavitra Admin</div>
+          <div className="font-display font-semibold text-lg mb-6 px-2 tracking-wide">UoP Admin</div>
           <NavItems onClose={null} />
         </aside>
 

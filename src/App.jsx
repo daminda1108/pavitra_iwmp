@@ -3,6 +3,8 @@ import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/layout/ProtectedRoute'
 
 import Landing             from './pages/Landing'
+import Guidelines          from './pages/Guidelines'
+import Compliance          from './pages/Compliance'
 import Board               from './pages/Board'
 import WantedBoard         from './pages/WantedBoard'
 import ListingDetailPage   from './pages/ListingDetailPage'
@@ -15,13 +17,14 @@ import CollectorDashboard  from './pages/CollectorDashboard'
 import CollectorProfilePage from './pages/CollectorProfilePage'
 import NotFound            from './pages/NotFound'
 
-import AdminLayout    from './pages/admin/AdminLayout'
-import AdminOverview  from './pages/admin/AdminOverview'
-import AdminCollectors from './pages/admin/AdminCollectors'
-import AdminGenerators from './pages/admin/AdminGenerators'
-import AdminListings  from './pages/admin/AdminListings'
-import AdminMaterials from './pages/admin/AdminMaterials'
-import AdminReports   from './pages/admin/AdminReports'
+import AdminLayout         from './pages/admin/AdminLayout'
+import AdminOverview        from './pages/admin/AdminOverview'
+import AdminCollectors      from './pages/admin/AdminCollectors'
+import AdminGenerators      from './pages/admin/AdminGenerators'
+import AdminListings        from './pages/admin/AdminListings'
+import AdminMaterials       from './pages/admin/AdminMaterials'
+import AdminReports         from './pages/admin/AdminReports'
+import AdminAnnouncements   from './pages/admin/AdminAnnouncements'
 
 export default function App() {
   return (
@@ -29,8 +32,10 @@ export default function App() {
       <AuthProvider>
         <Routes>
           {/* Public */}
-          <Route path="/"           element={<Landing />} />
-          <Route path="/board"      element={<Board />} />
+          <Route path="/"            element={<Landing />} />
+          <Route path="/guidelines"  element={<Guidelines />} />
+          <Route path="/compliance"  element={<Compliance />} />
+          <Route path="/board"       element={<Board />} />
           <Route path="/board/:id"  element={<ListingDetailPage />} />
           <Route path="/wanted"     element={<WantedBoard />} />
           <Route path="/login"                element={<Login />} />
@@ -72,8 +77,9 @@ export default function App() {
             <Route path="collectors" element={<AdminCollectors />} />
             <Route path="generators" element={<AdminGenerators />} />
             <Route path="listings"   element={<AdminListings />} />
-            <Route path="materials"  element={<AdminMaterials />} />
-            <Route path="reports"    element={<AdminReports />} />
+            <Route path="materials"      element={<AdminMaterials />} />
+            <Route path="announcements"  element={<AdminAnnouncements />} />
+            <Route path="reports"        element={<AdminReports />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

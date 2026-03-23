@@ -188,8 +188,12 @@ function InviteModal({ onClose, onCreated }) {
     setSaving(true)
     setError('')
     const expires_at = new Date(Date.now() + parseInt(form.days) * 86400000).toISOString()
-    // Get institution_id for UoP (first institution, or could be scoped to admin's institution)
-    const { data: inst } = await supabase.from('institutions').select('id').limit(1).single()
+    // Get institution_id for UoP by name, fallback to first institution
+    let { data: inst } = await supabase.from('institutions').select('id').eq('name', 'University of Peradeniya').maybeSingle()
+    if (!inst) {
+      const { data: fallback } = await supabase.from('institutions').select('id').limit(1).maybeSingle()
+      inst = fallback
+    }
     const { data, error: err } = await supabase.from('generator_invites').insert({
       email:          form.email || null,
       faculty:        form.faculty || null,
