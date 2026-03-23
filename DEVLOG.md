@@ -1,7 +1,55 @@
-# Pavitra — Development Log
+# UoP IWMP — Development Log
 
 All sessions logged here in reverse chronological order (newest first).
 Each entry covers: what was designed/decided, what was built, and what's next.
+
+---
+
+## Session 4 — 2026-03-23
+
+### Context
+Platform shown to overseeing professor and approved. This session reconfigures it specifically for University of Peradeniya as the UoP Integrated Waste Management Platform (IWMP) and adds an information management system.
+
+### Bug fixes (Part 1)
+- **AuthContext.signIn race condition (critical)** — `signIn()` now calls `setUser` + `fetchProfile` directly before returning, so `ProtectedRoute` sees auth state immediately on navigation. This fixes the dashboard not loading after login.
+- **ListingCard dynamic color class** — replaced `bg-${color}-400` with static `STREAM_DOT` map to prevent Tailwind from purging dynamic class names at build time.
+- **AdminGenerators institution fetch** — changed `.limit(1).single()` to `.eq('name', 'University of Peradeniya').maybeSingle()` with fallback, preventing errors when multiple institutions exist.
+- **index.html title** — changed from "vite-temp" to "UoP IWMP — Integrated Waste Management".
+
+### UoP rebrand (Part 2)
+- **Color system** — `tailwind.config.js` updated: `brand-forest` → UoP Maroon `#800020`, `brand-moss` → deep maroon `#5C0013`, `brand-sage` → UoP Gold `#C5A649`, `brand-cream` → light gold `#F5EED6`, `brand-bark` → dark maroon `#4A0010`. Token names unchanged so all existing classes auto-update.
+- **Name/identity** — all "Pavitra" replaced with "UoP IWMP" across Navbar, Login, AdminLayout, Landing, footer. Motto "Vidya Dadati Vinayam" added. GraduationCap icon replaces Leaf.
+- **Navbar** — full mobile hamburger menu added (Guidelines + Compliance + all links), two-line logo.
+- **Landing** — hero copy updated to UoP context, footer enhanced with Guidelines/Compliance links and motto.
+
+### Information management system (Part 3)
+- **`src/pages/Guidelines.jsx`** (`/guidelines`) — comprehensive waste handling SOPs for 6 streams: Chemical/Lab Waste, E-Waste, Organic, Plastic, General, Hazardous Emergency. Each section: accordion with do's/don'ts, required PPE, regulatory references. Pre-listing quick-reference card.
+- **`src/pages/Compliance.jsx`** (`/compliance`) — CEA regulations, Basel Convention, UoP institutional policies (all accordions), interactive 10-item pre-listing compliance checklist (checks off and shows green confirmation when complete), useful links.
+- **`src/pages/admin/AdminAnnouncements.jsx`** (`/admin/announcements`) — full CRUD: create/edit/delete announcements, pin/unpin, show/hide (is_active). Categories: general, policy, safety, regulation. Modal form.
+- **`announcements` DB table** — created in Supabase via Management API with RLS: public read of active announcements, admin write.
+- **`AdminReports.jsx`** enhanced — 4th summary card (claim rate), faculty/department breakdown bar chart, CSV export button (downloads all listing data as dated CSV file). Bar chart color updated to UoP Maroon.
+
+### Navigation (Part 4)
+- App.jsx: added `/guidelines`, `/compliance`, `/admin/announcements` routes.
+- AdminLayout: added Announcements nav item with Megaphone icon (between Materials and Reports).
+
+### Build + deploy
+- `npm run build` — passes, zero errors (2.42s, 1005kB bundle with recharts expected).
+- Pushed to GitHub `master` → Vercel auto-deploys.
+
+### Current status
+All planned items in UOP_REBRAND_PLAN.md completed. Platform is now fully branded as UoP IWMP with:
+- Dashboard navigation fixed (critical bug)
+- UoP maroon/gold color scheme throughout
+- Waste Guidelines and Compliance Hub pages live
+- Admin Announcements system (DB + UI)
+- Enhanced Reports with faculty breakdown + CSV export
+- Full mobile navigation on both public navbar and admin panel
+
+### Deferred to next session
+- Announcements display widget on generator/collector dashboards
+- Completion flow (two-sided confirmation + WTR PDF generation)
+- Collector coordinator UI
 
 ---
 
